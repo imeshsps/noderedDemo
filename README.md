@@ -2,6 +2,15 @@
 
 A comprehensive Node-RED demonstration showcasing a smart home automation system with dynamic dummy data. This demo simulates various home automation sensors and devices with real-time data updates.
 
+## Quick Start
+
+```bash
+npm install
+npm start
+```
+
+Then open http://localhost:1880/ui in your browser to see the dashboard!
+
 ## Features
 
 This demo includes the following home automation components:
@@ -56,21 +65,57 @@ npm install
 
 This will install Node-RED and the node-red-dashboard package which provides all the UI widgets (gauges, charts, text displays).
 
-3. Start Node-RED:
+3. **IMPORTANT**: Stop any existing Node-RED instances:
+```bash
+npm run stop
+# or manually:
+pkill -f node-red
+```
+
+**Why this is critical:** If Node-RED is already running from a different directory (like your global `~/.node-red`), it won't find the dashboard nodes from this project. You MUST ensure no other Node-RED instances are running.
+
+4. Start the demo application:
 ```bash
 npm start
 ```
 
-The application will start with the custom settings file that ensures all dashboard nodes are properly loaded.
+The `npm start` command will:
+- Automatically stop any running Node-RED instances
+- Start Node-RED with the project's settings file
+- Use the current directory as the userDir (so it finds node_modules/node-red-dashboard)
+- Load the flows from flows.json
 
-4. Access the Node-RED editor:
+**Alternative method** using the shell script:
+```bash
+./start.sh
+```
+
+5. Verify successful startup:
+
+You should see output similar to:
+```
+Settings file : /path/to/noderedDemo/settings.js
+User directory : /path/to/noderedDemo
+```
+
+**NOT** from ~/.node-red! If you see ~/.node-red in the output, the wrong instance is running.
+
+6. Access the Node-RED editor:
 - Open your browser and navigate to: `http://localhost:1880`
 - You should see the "Home Automation Demo" flow loaded with all nodes properly initialized
+- All nodes should be green (no red triangles indicating errors)
 
-5. View the Dashboard:
+7. View the Dashboard:
 - Click on the dashboard icon (top-right corner in the editor), or
 - Navigate directly to: `http://localhost:1880/ui`
 - You should see the "Home Automation Dashboard" with live updating data!
+
+8. To stop the application:
+```bash
+# Press Ctrl+C in the terminal where Node-RED is running
+# or in a new terminal:
+npm run stop
+```
 
 ## Dashboard Layout
 
@@ -135,19 +180,57 @@ const temp = (18 + Math.random() * 8).toFixed(1);  // 18-26°C
 ### Missing dashboard nodes (ui_gauge, ui_text, ui_chart, etc.)
 If you see errors like "Flows stopped due to missing node types: ui_gauge, ui_text, ui_chart":
 
+**Root Cause:** Node-RED is running from the wrong directory and can't find the dashboard nodes.
+
 **Solution:**
-1. Make sure you ran `npm install` in the project directory
-2. Verify node-red-dashboard is installed:
+
+1. **Check the Node-RED startup output**. Look for these lines:
+   ```
+   Settings file : /home/vegaai/.node-red/settings.js    ← WRONG!
+   User directory : /home/vegaai/.node-red               ← WRONG!
+   ```
+
+   It should say:
+   ```
+   Settings file : /path/to/noderedDemo/settings.js      ← CORRECT!
+   User directory : /path/to/noderedDemo                 ← CORRECT!
+   ```
+
+2. **If you see the WRONG paths**, it means:
+   - You didn't run `npm start` from the project directory, OR
+   - Another Node-RED instance is running
+
+3. **Fix it:**
+   ```bash
+   # Kill any running Node-RED instances
+   pkill -f node-red
+
+   # Make sure you're in the project directory
+   cd ~/downloads/noderedDemo  # or wherever you cloned the repo
+
+   # Verify node-red-dashboard is installed
+   ls node_modules/node-red-dashboard
+
+   # Start using npm (this is important!)
+   npm start
+   ```
+
+4. **Verify node-red-dashboard is installed:**
    ```bash
    ls node_modules/node-red-dashboard
    ```
-3. If missing, install it manually:
+
+   If it's missing:
    ```bash
    npm install node-red-dashboard
    ```
-4. Restart Node-RED with `npm start`
 
-The settings.js file is configured to load nodes from the local node_modules directory, so the dashboard should be available after installation.
+5. **Make sure to use `npm start`**, NOT just `node-red`:
+   - ✅ CORRECT: `npm start`
+   - ❌ WRONG: `node-red` (this uses global settings)
+   - ❌ WRONG: `node-red flows.json` (this uses global settings)
+
+The key is that `npm start` passes the correct --settings and --userDir flags to Node-RED.
 
 ### Node-RED won't start
 - Ensure Node.js is installed: `node --version`

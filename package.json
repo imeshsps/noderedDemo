@@ -4,8 +4,9 @@
   "description": "Node-RED Home Automation Demo with dynamic dummy data",
   "main": "index.js",
   "scripts": {
-    "start": "node-red --settings settings.js --userDir ./",
-    "dev": "node-red --settings settings.js --userDir ./"
+    "prestart": "pkill -f 'node-red' 2>/dev/null || true",
+    "start": "node-red --settings ./settings.js --userDir .",
+    "stop": "pkill -f 'node-red' || echo 'No Node-RED process found'"
   },
   "keywords": [
     "node-red",

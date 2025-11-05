@@ -51,6 +51,10 @@ module.exports = {
     // The following property can be used to specify an additional directory to scan.
     nodesDir: './nodes',
 
+    // Tell Node-RED to also load nodes from the local node_modules directory
+    // This is critical for loading node-red-dashboard and other npm-installed nodes
+    nodesExcludes: [],
+
     // By default, the Node-RED UI is available at http://localhost:1880/
     // The following property can be used to specify a different root path.
     //httpAdminRoot: '/admin',
