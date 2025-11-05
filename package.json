@@ -1,0 +1,25 @@
+{
+  "name": "nodered-home-automation-demo",
+  "version": "1.0.0",
+  "description": "Node-RED Home Automation Demo with dynamic dummy data",
+  "main": "index.js",
+  "scripts": {
+    "start": "node-red flows.json",
+    "dev": "node-red flows.json"
+  },
+  "keywords": [
+    "node-red",
+    "home-automation",
+    "iot",
+    "demo"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "node-red": "^3.1.0",
+    "node-red-dashboard": "^3.6.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
