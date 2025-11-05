@@ -54,23 +54,23 @@ cd noderedDemo
 npm install
 ```
 
+This will install Node-RED and the node-red-dashboard package which provides all the UI widgets (gauges, charts, text displays).
+
 3. Start Node-RED:
 ```bash
 npm start
 ```
 
-Alternatively, you can use:
-```bash
-node-red flows.json
-```
+The application will start with the custom settings file that ensures all dashboard nodes are properly loaded.
 
 4. Access the Node-RED editor:
 - Open your browser and navigate to: `http://localhost:1880`
-- You should see the "Home Automation Demo" flow loaded
+- You should see the "Home Automation Demo" flow loaded with all nodes properly initialized
 
 5. View the Dashboard:
-- Click on the dashboard icon in the top-right corner, or
-- Navigate to: `http://localhost:1880/ui`
+- Click on the dashboard icon (top-right corner in the editor), or
+- Navigate directly to: `http://localhost:1880/ui`
+- You should see the "Home Automation Dashboard" with live updating data!
 
 ## Dashboard Layout
 
@@ -132,21 +132,41 @@ const temp = (18 + Math.random() * 8).toFixed(1);  // 18-26°C
 
 ## Troubleshooting
 
+### Missing dashboard nodes (ui_gauge, ui_text, ui_chart, etc.)
+If you see errors like "Flows stopped due to missing node types: ui_gauge, ui_text, ui_chart":
+
+**Solution:**
+1. Make sure you ran `npm install` in the project directory
+2. Verify node-red-dashboard is installed:
+   ```bash
+   ls node_modules/node-red-dashboard
+   ```
+3. If missing, install it manually:
+   ```bash
+   npm install node-red-dashboard
+   ```
+4. Restart Node-RED with `npm start`
+
+The settings.js file is configured to load nodes from the local node_modules directory, so the dashboard should be available after installation.
+
 ### Node-RED won't start
 - Ensure Node.js is installed: `node --version`
-- Check if port 1880 is available
-- Try running: `node-red --safe` to start in safe mode
+- Check if port 1880 is available (use `lsof -i :1880` on Linux/Mac or `netstat -ano | findstr :1880` on Windows)
+- Make sure you're in the correct directory with package.json and settings.js
+- Check the console output for specific error messages
 
 ### Dashboard not showing data
-- Verify Node-RED is running
-- Check that all flows are deployed (click Deploy button)
+- Verify Node-RED is running at http://localhost:1880
+- Check that all flows are deployed (click the "Deploy" button in the top-right)
+- Ensure you're accessing the dashboard at http://localhost:1880/ui (note the /ui path)
+- Check the debug panel in Node-RED editor to see if data is flowing
 - Clear browser cache and refresh
 
-### Missing dashboard nodes
-If you see errors about missing dashboard nodes:
-```bash
-npm install node-red-dashboard
-```
+### Flows not running
+- Click the "Deploy" button in the Node-RED editor
+- Check for any error nodes (nodes with red triangles)
+- Look at the debug output panel on the right side of the editor
+- Verify all inject nodes are enabled (blue square on the left side of the node)
 
 ## Technologies Used
 

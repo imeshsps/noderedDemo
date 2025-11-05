@@ -4,8 +4,8 @@
   "description": "Node-RED Home Automation Demo with dynamic dummy data",
   "main": "index.js",
   "scripts": {
-    "start": "node-red flows.json",
-    "dev": "node-red flows.json"
+    "start": "node-red --settings settings.js --userDir ./",
+    "dev": "node-red --settings settings.js --userDir ./"
   },
   "keywords": [
     "node-red",
